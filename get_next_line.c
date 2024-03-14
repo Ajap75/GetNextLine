@@ -41,7 +41,17 @@ char	*ft_get_line(char *safe, char *buf, int fd)
 	}
 	return (safe);
 }
-
+/*The read function load the buf with Buffer_size bytes,
+and return the number of bytes actually readed. It can be less than buffer size,
+if the function has reach the end of the file,
+or return a negative number in case of an error. 
+We need a safe to store the readed bytes. If the safe doesn't exist yet we creat it.
+We null terminate buff which store the bytes readed by the read function. 
+Safe store, every bytes readed. (truncated of what have been returned
+by the get_next_line function, thanks to ft_cleanline_updatesafe (char *line) function.
+Safe need to be update at every call of the function by adding what have been read at this call
+to what has been stored. --> tmp= safe / then / strjoin(tmp, buf);
+Of course we need to free tmp and set Tmp to null at the end.*/
 char	*ft_cleanline_updatesafe(char *line)
 {
 	int		i;
@@ -61,6 +71,15 @@ char	*ft_cleanline_updatesafe(char *line)
 	line[i + 1] = '\0';
 	return (dest);
 }
+/*This function is the center of everything, the tricky part. 
+The name is pretty clear. It has two main goals. 
+1) we go through the line searching for \n.
+When a \n is found, it means that WE HAVE A LINE. 
+2) Update safe in GNl by extracting with substr everything
+after the \n from line (i + 1) to leave the \n in the line. 
+1) Then Update the line(the return of Gnl)
+by truncating the line at /n --> line[i + 1] = '\0'. 
+*/
 
 char	*get_next_line(int fd)
 {
@@ -81,6 +100,16 @@ char	*get_next_line(int fd)
 	safe = ft_cleanline_updatesafe(line);
 	return (line);
 }
+/*The get next line function aim to read bytes
+from a file descriptor and return a line.
+line is ended by a /n or /0 if it's the end of the file.
+The function has to keep in memory everything it has already
+read during the last call, minus what have been return. 
+For example if in what it has readed (BUFFER_size) there is a \n.
+It has to be abble to return the bytes readed to \n. But also to keep in memory,
+the bytes readed between /n and buffer_size to store every extra bytes read and
+to add them at the begining of the next return (the next line)
+when the function will be call again. And so on. 
 /*
 int	main(void)
 {
