@@ -42,6 +42,7 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	stash[i] = '\0';
 	return (stash);
 }
+/*malloc a new string which is the union of s1 et s2*/
 
 char	*ft_substr(char const *line, unsigned int start, size_t len)
 {
@@ -67,6 +68,9 @@ char	*ft_substr(char const *line, unsigned int start, size_t len)
 	return (substr);
 }
 
+/*A substr is malloc and extract from a string (line), the substr begin at "start" and end either at the end of line 
+or once we've reached the max size of substr = "len"*/
+
 char	*ft_strchr(char *str, char c)
 {
 	int	i;
@@ -82,3 +86,4 @@ char	*ft_strchr(char *str, char c)
 	}
 	return (NULL);
 }
+/*Find a character in a string. If the char is found, the string is returned*/
